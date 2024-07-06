@@ -3,16 +3,17 @@ from django.db import models
 
 # Create your models here.
 
-class UserType(models.IntegerChoices):
-    ADMIN = 1
-    DRIVER = 2
-    SIMPLE = 3
+userType = (
+    (1, 'ADMIN'),
+    (2, 'DRIVER'),
+    (3, 'SIMPLE'),
+)
 
 
 class User(models.Model):
     telegram_id = models.CharField(max_length=200, unique=True)
     username = models.CharField(max_length=50, blank=True, null=True)
-    type = models.IntegerField(choices=UserType, default=UserType.SIMPLE)
+    type = models.IntegerField(choices=userType, default=3)
 
 
 class UserStage(models.Model):

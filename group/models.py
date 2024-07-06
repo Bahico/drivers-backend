@@ -1,14 +1,14 @@
 from django.db import models
 
-
 # Create your models here.
 
-class GroupType(models.IntegerChoices):
-    GET_MESSAGE = 1
-    SEND_MESSAGE = 2
+groupType = (
+    (1, 'GET_MESSAGE'),
+    (2, 'SEND_MESSAGE')
+)
 
 
 class Group(models.Model):
     name = models.CharField(max_length=255)
     telegram_id = models.IntegerField()
-    type = models.IntegerField(choices=GroupType)
+    type = models.IntegerField(choices=groupType)

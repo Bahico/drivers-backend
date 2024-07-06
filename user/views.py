@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from user.models import User, UserStage, UserType
+from user.models import User, UserStage
 from user.serializers import UserSerializer, StageSerializer
 
 
@@ -25,7 +25,7 @@ class UserView(APIView):
         user = self.get_object(telegram_id)
         if not user:
             if not request.data['type']:
-                request.data['type'] = UserType.SIMPLE
+                request.data['type'] = 3
             serializer = UserSerializer(data=request.data)
             stage_serializer = StageSerializer(data={
                 "telegram_id": telegram_id,
