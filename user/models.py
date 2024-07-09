@@ -12,6 +12,7 @@ userType = (
 
 class User(models.Model):
     telegram_id = models.CharField(max_length=200, unique=True)
+    last_name = models.CharField(max_length=250, blank=True, null=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     type = models.IntegerField(choices=userType, default=3)
 

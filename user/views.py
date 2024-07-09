@@ -27,10 +27,12 @@ class UserView(APIView):
             if not request.data['type']:
                 request.data['type'] = 3
             serializer = UserSerializer(data=request.data)
+
             stage_serializer = StageSerializer(data={
                 "telegram_id": telegram_id,
                 "step": "start"
             })
+
             if serializer.is_valid():
                 serializer.save()
                 if stage_serializer.is_valid():
@@ -44,7 +46,6 @@ class UserView(APIView):
 
     def put(self, request: Request, telegram_id: int):
         region = self.get_object(telegram_id)
-        print(request.data)
         serializer = UserSerializer(region, data=request.data)
         if serializer.is_valid():
             serializer.save()
