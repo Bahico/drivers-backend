@@ -23,6 +23,7 @@ class UserView(APIView):
 
     def post(self, request: Request, telegram_id: int):
         user = self.get_object(telegram_id)
+        print(request.data)
         if not user:
             if not request.data['type']:
                 request.data['type'] = 3
@@ -41,6 +42,13 @@ class UserView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             print(serializer.errors, ': user')
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if request.data['chat_id']:
+            user.chat_id = request.data['chat_id']
+            user.save()
+        if request.data['type']:
+            user.type = request.data['type']
+            user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
