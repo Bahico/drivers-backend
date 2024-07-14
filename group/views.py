@@ -14,7 +14,7 @@ class GroupView(APIView):
     @staticmethod
     def get_object(telegram_id):
         try:
-            return Group.objects.get(telegram_id=telegram_id)
+            return Group.objects.get(id=telegram_id)
         except:
             return False
 
@@ -31,7 +31,8 @@ class GroupView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request: Request, telegram_id: int):
+    def delete(self, request: Request, telegram_id: str):
+        print(telegram_id, type(telegram_id))
         group = self.get_object(telegram_id)
         print(group, telegram_id)
         if group:

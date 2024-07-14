@@ -20,6 +20,6 @@ class Message(models.Model):
 
 
 class SendMessage(models.Model):
-    chat_id = models.IntegerField()
+    chat_id = models.CharField(max_length=255)
     client_message_id = models.IntegerField()
     message_id = models.IntegerField()

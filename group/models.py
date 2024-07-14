@@ -10,5 +10,5 @@ groupType = (
 
 class Group(models.Model):
     name = models.CharField(max_length=255)
-    telegram_id = models.IntegerField()
+    telegram_id = models.CharField(max_length=255)
     type = models.IntegerField(choices=groupType)
