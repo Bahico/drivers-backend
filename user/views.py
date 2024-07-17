@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 
-from user.models import User, UserStage
+from user.models import User, UserStage, StandardResultsSetPagination
 from user.serializers import UserSerializer, StageSerializer
 
 
@@ -92,3 +92,33 @@ class UserStageView(APIView):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class UserPageView(APIView, StandardResultsSetPagination):
+    model = User
+    serializer = UserSerializer
+
+    def get(self, request: Request):
+        results = self.paginate_queryset(self.model.objects.filter(type=request.query_params['user_type']), request, view=self)
+        serializer = self.serializer(results, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    def get_paginated_response(self, data):
+        return Response({
+            'links': {
+                'next': self.get_next_link(),
+                'previous': self.get_previous_link()
+            },
+            'count': self.page.paginator.count,
+            'current_page': self.page.number,
+            'results': data,
+        })
+
+    def delete(self, request: Request, user_id: int):
+        try:
+            user = self.model.objects.get(id=user_id)
+            returnValue = self.serializer(user).data
+            user.delete()
+            return Response(returnValue, status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)

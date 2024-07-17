@@ -8,7 +8,7 @@ urlpatterns = [
     path('cancel-order/<int:message_id>/', views.OrderCancel.as_view()),
     path('accept-order/<int:message_id>/', views.OrderAccept.as_view()),
     path('send-message/', views.SendMessageView.as_view()),
-    path('send-message/<int:message_id>/', views.SendMessageView.as_view()),
+    path('send-message/<str:message_id>/', views.SendMessageView.as_view()),
 ]
 
 

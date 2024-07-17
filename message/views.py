@@ -71,7 +71,8 @@ class OrderAccept(APIView):
         message = model_get(message_id)
         if message:
             print(message.driver_order_index, message.drivers.values())
-            message.accept_driver = DriverOrder.objects.filter(id=message.drivers.values()[message.driver_order_index]['id'])[0]
+            message.accept_driver = \
+            DriverOrder.objects.filter(id=message.drivers.values()[message.driver_order_index]['id'])[0]
             message.save()
             return Response(status=status.HTTP_200_OK)
         return Response(status=status.HTTP_404_NOT_FOUND)
@@ -108,7 +109,8 @@ class SendMessageView(APIView):
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request: Request, message_id: int = None):
+    def get(self, request: Request, message_id: str = None):
+        print(message_id, type(message_id), str(message_id))
         if message_id:
             return Response(self.serializer(self.model.objects.filter(client_message_id=message_id), many=True).data)
         else:

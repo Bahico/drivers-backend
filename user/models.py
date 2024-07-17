@@ -1,5 +1,5 @@
 from django.db import models
-
+from rest_framework.pagination import PageNumberPagination
 
 # Create your models here.
 
@@ -22,3 +22,9 @@ class UserStage(models.Model):
     telegram_id = models.CharField(max_length=200, unique=True)
     step = models.CharField(max_length=200)
     step_under = models.CharField(max_length=200, blank=True, null=True)
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 100
