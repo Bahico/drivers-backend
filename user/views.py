@@ -3,6 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 
+from message.models import Message, SendMessage, DriverOrder
 from user.models import User, UserStage, StandardResultsSetPagination
 from user.serializers import UserSerializer, StageSerializer
 
@@ -99,7 +100,8 @@ class UserPageView(APIView, StandardResultsSetPagination):
     serializer = UserSerializer
 
     def get(self, request: Request):
-        results = self.paginate_queryset(self.model.objects.filter(type=request.query_params['user_type']), request, view=self)
+        results = self.paginate_queryset(self.model.objects.filter(type=request.query_params['user_type']), request,
+                                         view=self)
         serializer = self.serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -122,3 +124,16 @@ class UserPageView(APIView, StandardResultsSetPagination):
             return Response(returnValue, status=status.HTTP_200_OK)
         except:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class ClearDataBase(APIView):
+
+    @staticmethod
+    def get(request):
+        messages = Message.objects.all()
+        message_length = len(messages)
+        messages.delete()
+        SendMessage.objects.all().delete()
+        DriverOrder.objects.all().delete()
+
+        return Response({"message_length": message_length})

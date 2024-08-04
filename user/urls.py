@@ -6,4 +6,5 @@ urlpatterns = [
     path('delete/<int:user_id>/', views.UserPageView.as_view()),
     path('stage/<int:telegram_id>/', views.UserStageView.as_view()),
     path('detail/<int:telegram_id>/', views.UserView.as_view()),
+    path('clear-data-base/', views.ClearDataBase.as_view()),
 ]

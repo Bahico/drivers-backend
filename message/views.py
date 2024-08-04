@@ -70,7 +70,6 @@ class OrderAccept(APIView):
     def get(self, request: Request, message_id: int):
         message = model_get(message_id)
         if message:
-            print(message.driver_order_index, message.drivers.values())
             message.accept_driver = \
             DriverOrder.objects.filter(id=message.drivers.values()[message.driver_order_index]['id'])[0]
             message.save()
