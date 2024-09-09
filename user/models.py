@@ -28,3 +28,7 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
     max_page_size = 100
+
+
+class ActivationKey(models.Model):
+    activation_key = models.CharField(max_length=150)

@@ -1,11 +1,13 @@
+import uuid
+
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.request import Request
 
 from message.models import Message, SendMessage, DriverOrder
-from user.models import User, UserStage, StandardResultsSetPagination
-from user.serializers import UserSerializer, StageSerializer
+from user.models import User, UserStage, StandardResultsSetPagination, ActivationKey
+from user.serializers import UserSerializer, StageSerializer, ActivationSerializer
 
 
 # Create your views here.
@@ -137,3 +139,27 @@ class ClearDataBase(APIView):
         DriverOrder.objects.all().delete()
 
         return Response({"message_length": message_length})
+
+
+class ActivationView(APIView):
+    model = ActivationKey
+    serializer = ActivationSerializer
+
+    def get(self, request: Request):
+        serializer = self.serializer(data={"activation_key": uuid.uuid4().__str__()})
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        print(serializer.errors)
+        return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def post(self, request: Request):
+        try:
+            model = self.model.objects.get(activation_key=request.data['activation_key'])
+            user = User.objects.get(telegram_id=request.data['telegram_id'])
+            user.type = 2
+            user.save()
+            model.delete()
+            return Response({"success": True})
+        except:
+            return Response({"success": False})
