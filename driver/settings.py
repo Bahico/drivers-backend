@@ -79,6 +79,7 @@ WSGI_APPLICATION = 'driver.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# docker run -d -i --name postgres -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -87,11 +88,9 @@ DATABASES = {
 
         'USER': 'postgres',
 
-        'PASSWORD': 'postgres',
-
         'HOST': '176.221.28.216',
 
-        'PORT': '5434',
+        'PORT': '5432',
     }
 }
 

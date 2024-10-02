@@ -1,8 +1,9 @@
+name: driver
 version: "3.12"
 
 services:
   django:
-    image: django-docker:0.0.1
+    image: backend
     build: .
     ports:
       - "8000:8000"
