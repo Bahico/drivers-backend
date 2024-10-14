@@ -11,17 +11,23 @@ userType = (
 
 
 class User(models.Model):
-    telegram_id = models.CharField(max_length=200, unique=True)
-    chat_id = models.CharField(max_length=200, unique=True, blank=True, null=True)
+    telegram_id = models.TextField(max_length=200)
+    chat_id = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=250, blank=True, null=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     type = models.IntegerField(choices=userType, default=3)
 
+    class Meta:
+        indexes = [ models.Index(fields=['telegram_id']), ]
+
 
 class UserStage(models.Model):
-    telegram_id = models.CharField(max_length=200, unique=True)
+    telegram_id = models.TextField(max_length=200)
     step = models.CharField(max_length=200)
     step_under = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        indexes = [ models.Index(fields=['telegram_id']), ]
 
 
 class StandardResultsSetPagination(PageNumberPagination):

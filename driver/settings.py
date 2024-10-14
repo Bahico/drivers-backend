@@ -82,17 +82,23 @@ WSGI_APPLICATION = 'driver.wsgi.application'
 # docker run -d -i --name postgres -p 5432:5432 -e POSTGRES_HOST_AUTH_METHOD=trust postgres
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
 
-        'NAME': "postgres",
+        'NAME': "fargona",
 
         'PASSWORD': "ikromov0303",
 
-        'USER': 'postgres',
+        'PASSWORD': "ikromov0303",
+
+        'USER': 'fargona',
 
         'HOST': '176.221.29.221',
 
-        'PORT': '5432',
+        'PORT': '3306',
+
+        'OPTIONS': {
+            'charset': 'utf8mb4'  # This is the important line
+        }
     }
 }
 
