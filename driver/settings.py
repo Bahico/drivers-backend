@@ -88,8 +88,6 @@ DATABASES = {
 
         'PASSWORD': "ikromov0303",
 
-        'PASSWORD': "ikromov0303",
-
         'USER': 'fargona',
 
         'HOST': '176.221.29.221',

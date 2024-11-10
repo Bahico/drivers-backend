@@ -121,10 +121,12 @@ class UserPageView(APIView, StandardResultsSetPagination):
     def delete(self, request: Request, user_id: int):
         try:
             user = self.model.objects.get(id=user_id)
-            returnValue = self.serializer(user).data
+            stage = UserStage.objects.get(telegram_id=user.telegram_id)
             user.delete()
-            return Response(returnValue, status=status.HTTP_200_OK)
-        except:
+            stage.delete()
+            return Response(status=status.HTTP_200_OK)
+        except Exception as e:
+            print(e)
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
