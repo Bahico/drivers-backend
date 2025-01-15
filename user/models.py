@@ -1,3 +1,4 @@
+
 from django.db import models
 from rest_framework.pagination import PageNumberPagination
 
@@ -11,23 +12,19 @@ userType = (
 
 
 class User(models.Model):
-    telegram_id = models.TextField(max_length=200)
+    telegram_id = models.CharField(max_length=200, null=True, unique=True)
     chat_id = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=250, blank=True, null=True)
     username = models.CharField(max_length=50, blank=True, null=True)
     type = models.IntegerField(choices=userType, default=3)
-
-    class Meta:
-        indexes = [ models.Index(fields=['telegram_id']), ]
-
-
-class UserStage(models.Model):
-    telegram_id = models.TextField(max_length=200)
-    step = models.CharField(max_length=200)
+    step = models.CharField(max_length=200, blank=True, null=True)
     step_under = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
-        indexes = [ models.Index(fields=['telegram_id']), ]
+        indexes = [models.Index(fields=['telegram_id']), ]
+
+    def __str__(self):
+        return self.last_name
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -38,3 +35,6 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 class ActivationKey(models.Model):
     activation_key = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.activation_key

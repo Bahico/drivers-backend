@@ -2,22 +2,22 @@ name: driver
 version: "3.12"
 
 services:
-  db:
-    image: mysql:8.0
-    container_name: mysql
-    restart: always
-    volumes:
-      - data:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: fargona
-      MYSQL_USER: fargona
-      MYSQL_PASSWORD: ikromov0303
-      MYSQL_ROOT_PASSWORD: ikromov
-    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
-    ports:
-      - "3306:3306"
-    networks:
-      - django_network
+#  db:
+#    image: mysql:8.0
+#    container_name: mysql
+#    restart: always
+#    volumes:
+#      - data:/var/lib/mysql
+#    environment:
+#      MYSQL_DATABASE: fargona
+#      MYSQL_USER: fargona
+#      MYSQL_PASSWORD: ikromov0303
+#      MYSQL_ROOT_PASSWORD: ikromov
+#    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+#    ports:
+#      - "3306:3306"
+#    networks:
+#      - django_network
 
   django:
     image: backend

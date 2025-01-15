@@ -18,6 +18,9 @@ class Message(models.Model):
     driver_order_index = models.IntegerField(default=0)
     accept_driver = models.ForeignKey(DriverOrder, on_delete=models.CASCADE, blank=True, null=True)
 
+    def __str__(self):
+        return self.text
+
 
 class SendMessage(models.Model):
     chat_id = models.CharField(max_length=255)
