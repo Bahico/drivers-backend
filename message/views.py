@@ -109,7 +109,6 @@ class SendMessageView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request: Request, message_id: str = None):
-        print(message_id, type(message_id), str(message_id))
         if message_id:
             return Response(self.serializer(self.model.objects.filter(client_message_id=message_id), many=True).data)
         else:

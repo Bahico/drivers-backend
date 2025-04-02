@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.request import Request
 
 from message.models import Message, SendMessage, DriverOrder
-from user.models import User, UserStage, StandardResultsSetPagination, ActivationKey
+from user.models import User, UserStage, StandardResultsSetPagination, ActivationKey, UserRole
 from user.serializers import UserSerializer, StageSerializer, ActivationSerializer
 
 
@@ -28,8 +28,8 @@ class UserView(APIView):
         user = self.get_object(telegram_id)
         print(request.data)
         if not user:
-            if not request.data['type']:
-                request.data['type'] = 3
+            if not request.data['roles']:
+                request.data['roles'] = [UserRole.SIMPLE.value]
             serializer = UserSerializer(data=request.data)
 
             stage_serializer = StageSerializer(data={
@@ -49,15 +49,15 @@ class UserView(APIView):
         if request.data['chat_id']:
             user.chat_id = request.data['chat_id']
             user.save()
-        if request.data['type']:
-            user.type = request.data['type']
+        if request.data['roles']:
+            user.roles = request.data['roles']
             user.save()
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
     def put(self, request: Request, telegram_id: int):
-        region = self.get_object(telegram_id)
-        serializer = UserSerializer(region, data=request.data)
+        user = self.get_object(telegram_id)
+        serializer = UserSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -102,8 +102,12 @@ class UserPageView(APIView, StandardResultsSetPagination):
     serializer = UserSerializer
 
     def get(self, request: Request):
-        results = self.paginate_queryset(self.model.objects.filter(type=request.query_params['user_type']), request,
-                                         view=self)
+        results = self.paginate_queryset(
+            self.model.objects.filter(roles__in=request.query_params['user_role']),
+            request,
+            view=self
+        )
+
         serializer = self.serializer(results, many=True)
         return self.get_paginated_response(serializer.data)
 
@@ -159,9 +163,10 @@ class ActivationView(APIView):
         try:
             model = self.model.objects.get(activation_key=request.data['activation_key'])
             user = User.objects.get(telegram_id=request.data['telegram_id'])
-            user.type = 2
+            user.roles.append(UserRole.DRIVER.value)
             user.save()
             model.delete()
+
             return Response({"success": True})
         except:
             return Response({"success": False})

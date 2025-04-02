@@ -1,13 +1,19 @@
 from django.db import models
 from rest_framework.pagination import PageNumberPagination
+from django.contrib.postgres.fields import ArrayField
+from enum import Enum
 
 # Create your models here.
 
-userType = (
-    (1, 'ADMIN'),
-    (2, 'DRIVER'),
-    (3, 'SIMPLE'),
-)
+
+class UserRole(Enum):
+    ADMIN = 'admin'
+    DRIVER = 'driver'
+    SIMPLE = 'simple'
+
+    @classmethod
+    def choices(cls):
+        return [(key, key.value) for key in cls]
 
 
 class User(models.Model):
@@ -15,10 +21,14 @@ class User(models.Model):
     chat_id = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=250, blank=True, null=True)
     username = models.CharField(max_length=50, blank=True, null=True)
-    type = models.IntegerField(choices=userType, default=3)
+    roles = ArrayField(
+        models.IntegerField(choices=UserRole.choices(), default=UserRole.SIMPLE.value),
+        blank=True,
+        default=list
+    )
 
     class Meta:
-        indexes = [ models.Index(fields=['telegram_id']), ]
+        indexes = [models.Index(fields=['telegram_id']), ]
 
 
 class UserStage(models.Model):
@@ -27,7 +37,7 @@ class UserStage(models.Model):
     step_under = models.CharField(max_length=200, blank=True, null=True)
 
     class Meta:
-        indexes = [ models.Index(fields=['telegram_id']), ]
+        indexes = [models.Index(fields=['telegram_id']), ]
 
 
 class StandardResultsSetPagination(PageNumberPagination):
